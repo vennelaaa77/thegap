@@ -802,10 +802,10 @@ function renderCampus(){
 function renderIndustry(){
   const v=document.getElementById("view-industry");
   v.innerHTML="";
-  const camN=pool(true).filter(r=>r.role==="campus").length;
+  const camN=collected().filter(r=>r.role==="campus").length;
   const intro=el(`<div class="scrap tilt">
     <p class="note">same eighteen questions</p>
-    <h2>${camN} students have already answered these</h2>
+    <h2>${camN?camN+" students have already answered these":"Same eighteen questions the students answered"}</h2>
     <p>Pick your side on each. Where you and campus split, we'll show you the number and ask you one question about it.</p>
     <p class="muted" style="margin-top:10px">Takes about four minutes. Your answers join the industry side of the study.</p>
     <div class="row"><button class="btn" id="starti">Start</button></div>
@@ -814,7 +814,7 @@ function renderIndustry(){
   document.getElementById("starti").addEventListener("click",()=>Quiz("industry",v));
 }
 
-let includeSample=true;
+let includeSample=false;
 function renderResearch(){
   const v=document.getElementById("view-research");
   const rows=pool(includeSample);
