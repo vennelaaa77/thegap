@@ -89,13 +89,12 @@ report however you like.
 
 ## Mailing the report afterwards
 
-`Code.gs` has a `mailTheReport()` function at the bottom. Put your report link
-in `REPORT_LINK`, save, pick `mailTheReport` from the function dropdown in the
-Apps Script editor and hit **Run**. It mails everyone who left an address, once
-each, and marks a `sent` column so re-running it skips them.
+The script deliberately does not send email, so it never asks for permission to
+your Gmail — it only touches the spreadsheet.
 
-Gmail caps consumer accounts at around 100 recipients a day, which is well
-above what you'll collect.
+To send the report, copy the `email` column out of the sheet and send it from
+Gmail yourself, with the addresses in BCC. For the numbers you'll be dealing
+with that takes a minute and keeps everyone's address private.
 
 ---
 
