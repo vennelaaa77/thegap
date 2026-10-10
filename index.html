@@ -69,6 +69,20 @@ h1{font-family:var(--f-display);font-weight:900;font-size:clamp(2.1rem,7vw,3.4re
   font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);
   border:1.5px solid var(--pink);border-radius:2px;padding:4px 9px;transform:rotate(-1.5deg);
 }
+.brandrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.logo{height:46px;width:auto;background:#fff;border:1px solid var(--rule);border-radius:3px;
+      padding:5px 8px;box-shadow:0 4px 12px -10px var(--shadow);flex:none}
+.clubtag{display:inline-block;background:var(--pink);color:#fff;font-family:var(--f-body);
+  font-weight:700;font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;
+  padding:7px 13px;border-radius:2px;transform:rotate(-1deg);
+  box-shadow:0 5px 14px -9px var(--shadow)}
+.contact{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:14px}
+.contact div{min-width:0}
+.contact .who{font-size:.64rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:2px}
+.contact a{font-family:var(--f-body);font-weight:700;font-size:1rem;color:var(--pink);
+  text-decoration:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.contact a:hover{text-decoration:underline}
 
 /* ---------- tabs ---------- */
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
@@ -204,7 +218,11 @@ label.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;tex
 <div class="wrap">
 
   <header class="mast">
-    <p class="eyebrow">Marketing Club presents</p>
+    <div class="brandrow">
+      <img class="logo" src="tapmi-logo.png" alt="TAPMI, a constituent unit of MAHE, Manipal">
+      <span class="clubtag">Marketing Club</span>
+    </div>
+    <p class="eyebrow">presents</p>
     <h1>The Gap</h1>
     <p class="dek">Eighteen questions with no right answer. Campus answers them. Industry answers them. We publish where the two disagree.</p>
     <span class="stamp">Field study &middot; GLC 4.0</span>
@@ -220,7 +238,22 @@ label.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;tex
   <section id="view-industry" role="tabpanel" aria-labelledby="tab-industry" hidden></section>
   <section id="view-research" role="tabpanel" aria-labelledby="tab-research" hidden></section>
 
-  <p class="foot">pinned together by the Marketing Club</p>
+  <div class="scrap tilt" style="margin-top:22px">
+    <p class="note" style="margin-bottom:4px">questions about the study?</p>
+    <h3 style="margin-bottom:10px">Talk to us</h3>
+    <div class="contact">
+      <div>
+        <div class="who">Convenor</div>
+        <a href="tel:+919693009594">+91 96930 09594</a>
+      </div>
+      <div>
+        <div class="who">Co-convenor</div>
+        <a href="tel:+919967522159">+91 99675 22159</a>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">pinned together by the Marketing Club &middot; TAPMI</p>
 </div>
 
 <script>
