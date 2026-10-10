@@ -529,7 +529,7 @@ const FIELD = {id:"entry.1721217034", role:"entry.698237970",
                answers:"entry.188983558", why:"entry.661385786", email:"entry.1365055442"};
 /* Published CSV of the Public sheet. Blank = writes still work, dashboard
    shows only this device until it's filled in. */
-const CSV_URL = "";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQntHVT0KM1AHLdRfsr4OT-4lv1XvrxX9H5Uf9AlfK2kH6Rj1t49m1jiiYmloLaFTlGItf-k5GvL1pH/pub?gid=13681261&single=true&output=csv";
 
 const KEY="gapstudy_v1";
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):[];}catch(e){return [];}}
@@ -907,8 +907,25 @@ function renderResearch(){
   v.appendChild(el(`<div class="scrap tilt-r">
     <h2>Export</h2>
     <p class="muted">${mine} real response${mine===1?"":"s"} so far${LOCAL.length?` (${LOCAL.length} of them saved only on this browser)`:""}. Copy them as JSON to pull into your analysis.</p>
-    <div class="row"><button class="btn ghost" id="cp">Copy raw responses</button><span id="cpmsg" class="ok" style="margin:0"></span></div>
+    <div class="row"><button class="btn" id="dl">Download CSV</button><button class="btn ghost" id="cp">Copy as JSON</button><span id="cpmsg" class="ok" style="margin:0"></span></div>
   </div>`));
+  document.getElementById("dl").addEventListener("click",()=>{
+    const esc=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+    const head=["id","role"].concat(QORDER).concat(QORDER.map(q=>"why_"+q));
+    const lines=[head.join(",")];
+    collected().forEach(r=>{
+      const a=r.answers||{},w=r.why||{};
+      lines.push([esc(r.id||""),esc(r.role||"")]
+        .concat(QORDER.map(q=>esc(a[q]||"")))
+        .concat(QORDER.map(q=>esc(w[q]||""))).join(","));
+    });
+    const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="the-gap-responses.csv";
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+  });
   document.getElementById("cp").addEventListener("click",async()=>{
     const txt=JSON.stringify(collected(),null,2);const m=document.getElementById("cpmsg");
     try{await navigator.clipboard.writeText(txt);m.textContent="copied";}
