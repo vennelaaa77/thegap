@@ -520,51 +520,88 @@ function buildSample(role,n,key){
 const SAMPLE=[...buildSample("campus",312,"seedC"),...buildSample("industry",41,"seedI")];
 
 /* ============================ STORAGE ============================ */
-/* Responses POST to a Google Apps Script web app, which writes them into
-   your Google Sheet. Paste your deployment URL here — nothing else to change. */
-const ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+/* Writes go to a Google Form (no sign-in, no permissions). The form fills a
+   spreadsheet. Reads come from a published CSV of that sheet with the email
+   column stripped out, so no address is ever at a public URL. */
+
+const FORM_POST = "https://docs.google.com/forms/d/e/1FAIpQLSdB4ZeP0T0UXx_EQTfKDHv8XBlhuMAvy9Dnv61jUwMJA-cZBQ/formResponse";
+const FIELD = {id:"entry.1721217034", role:"entry.698237970",
+               answers:"entry.188983558", why:"entry.661385786", email:"entry.1365055442"};
+/* Published CSV of the Public sheet. Blank = writes still work, dashboard
+   shows only this device until it's filled in. */
+const CSV_URL = "";
 
 const KEY="gapstudy_v1";
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):[];}catch(e){return [];}}
 function save(list){try{localStorage.setItem(KEY,JSON.stringify(list));}catch(e){}}
 let LOCAL=load();
-let REMOTE=[],lastId=null,shareState="connecting",currentTab="campus";
+let REMOTE=[],lastSent=null,shareState="connecting",currentTab="campus";
 
-const wired=()=>/^https:\/\//.test(ENDPOINT);
+const QORDER=["q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18"];
+const packAnswers=a=>QORDER.map(q=>a[q]||"-").join("");
+const unpackAnswers=s=>{const o={};QORDER.forEach((q,i)=>{const c=(s||"")[i];if(c==="A"||c==="B")o[q]=c;});return o;};
 
-async function refresh(){
-  if(!wired()){shareState="off";return;}
-  try{
-    const r=await fetch(ENDPOINT+"?action=all",{method:"GET"});
-    const j=await r.json();
-    REMOTE=Array.isArray(j.responses)?j.responses:[];
-    shareState="on";
-  }catch(e){shareState="off";}
-  if(currentTab==="research")renderResearch();
-}
-
-async function post(payload){
-  return fetch(ENDPOINT,{
-    method:"POST",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify(payload)
-  });
+function send(fields){
+  const body=new URLSearchParams();
+  Object.keys(fields).forEach(k=>body.append(FIELD[k],fields[k]));
+  return fetch(FORM_POST,{method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body.toString()});
 }
 
 async function addResponse(r){
   r.id="r_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);
-  if(wired()){
-    try{await post({action:"add",response:r});lastId=r.id;REMOTE.push(r);return;}
-    catch(e){}
-  }
-  lastId=null;LOCAL.push(r);save(LOCAL);
+  try{
+    await send({id:r.id,role:r.role,answers:packAnswers(r.answers||{}),
+                why:JSON.stringify(r.why||{}),email:""});
+    lastSent=r;
+    REMOTE.push({id:r.id,role:r.role,answers:r.answers||{},why:r.why||{}});
+    return;
+  }catch(e){}
+  lastSent=null;LOCAL.push(r);save(LOCAL);
 }
 
 async function attachEmail(v){
-  if(lastId&&wired()){
-    try{await post({action:"email",id:lastId,email:v});return;}catch(e){}
+  if(lastSent){
+    try{
+      await send({id:lastSent.id+"_email",role:lastSent.role,
+                  answers:packAnswers(lastSent.answers||{}),why:"",email:v});
+      return;
+    }catch(e){}
   }
   const list=load();if(list.length){list[list.length-1].email=v;save(list);LOCAL=list;}
+}
+
+/* --- read back --- */
+function parseCSV(text){
+  const rows=[];let row=[],cell="",q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){cell+='"';i++;} else q=false; } else cell+=c; }
+    else if(c==='"') q=true;
+    else if(c===","){row.push(cell);cell="";}
+    else if(c==="\n"){row.push(cell);rows.push(row);row=[];cell="";}
+    else if(c!=="\r") cell+=c;
+  }
+  if(cell.length||row.length){row.push(cell);rows.push(row);}
+  return rows;
+}
+
+async function refresh(){
+  if(!/^https:\/\//.test(CSV_URL)){shareState="off";return;}
+  try{
+    const r=await fetch(CSV_URL+(CSV_URL.indexOf("?")<0?"?":"&")+"t="+Date.now());
+    const rows=parseCSV(await r.text());
+    const out=[];
+    rows.slice(1).forEach(c=>{
+      const id=(c[0]||"").trim(),role=(c[1]||"").trim(),ans=(c[2]||"").trim();
+      if(role!=="campus"&&role!=="industry")return;
+      if(/_email$/.test(id))return;
+      let why={};try{why=JSON.parse(c[3]||"{}")||{};}catch(e){}
+      out.push({id,role,answers:unpackAnswers(ans),why});
+    });
+    REMOTE=out;shareState="on";
+  }catch(e){shareState="off";}
+  if(currentTab==="research")renderResearch();
 }
 
 refresh();
@@ -815,9 +852,9 @@ function renderResearch(){
     <label class="toggle"><input type="checkbox" id="smp" ${includeSample?"checked":""}> Include the sample baseline dataset</label>
     <p class="muted" style="margin-top:6px;font-size:.8rem">The baseline is placeholder data so the dashboard reads properly before collection. Untick it to see only real responses.</p>
     <p class="muted" style="margin-top:10px;font-size:.8rem"><b>Shared store:</b> ${
-      shareState==="on"?`writing to your Google Sheet &mdash; ${REMOTE.length} response${REMOTE.length===1?"":"s"} saved for everyone`
+      shareState==="on"?`saving to your Google Sheet &mdash; ${REMOTE.length} response${REMOTE.length===1?"":"s"} saved for everyone`
       :shareState==="connecting"?"connecting&hellip;"
-      :"not connected &mdash; check the ENDPOINT URL at the top of the file"}</p>
+      :"live totals not switched on yet &mdash; votes are still being saved"}</p>
   </div>`));
   document.getElementById("smp").addEventListener("change",e=>{includeSample=e.target.checked;renderResearch();});
 
