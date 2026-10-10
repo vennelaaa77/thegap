@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>The Gap Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Karla:wght@400;500;700&display=swap">
+
+<style>
+/* Layout: pinned paper scraps on a blush corkboard. Single committed light theme. */
+:root{
+  --paper:#FFFBF7;
+  --board:#FBE9EC;
+  --board-2:#F7DCE3;
+  --ink:#2E1B22;
+  --ink-soft:#7A5E66;
+  --pink:#D6336C;
+  --pink-soft:#FFD6E2;
+  --tape:#FBE7A8;
+  --mint:#AFD6C4;
+  --rule:#E8CFD6;
+  --shadow:rgba(90,40,55,.16);
+  --f-display:"Fraunces",Georgia,serif;
+  --f-body:"Karla","Helvetica Neue",Arial,sans-serif;
+  --f-hand:"Caveat","Bradley Hand",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--board);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,.7) 0 2px, transparent 3px),
+    radial-gradient(circle at 73% 61%, rgba(255,255,255,.55) 0 2px, transparent 3px),
+    radial-gradient(circle at 36% 84%, rgba(255,255,255,.5) 0 1.5px, transparent 3px),
+    linear-gradient(170deg,var(--board) 0%,var(--board-2) 100%);
+  background-size:140px 140px,190px 190px,110px 110px,100% 100%;
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 72px}
+
+/* ---------- masthead ---------- */
+.mast{
+  position:relative;background:var(--paper);border:1px solid var(--rule);
+  border-radius:3px;box-shadow:0 10px 24px -14px var(--shadow);
+  padding:26px 22px 20px;margin-bottom:14px;
+}
+.mast::before,.mast::after{
+  content:"";position:absolute;top:-11px;width:84px;height:24px;
+  background:var(--tape);opacity:.85;box-shadow:0 2px 5px -3px var(--shadow);
+}
+.mast::before{left:26px;transform:rotate(-4deg)}
+.mast::after{right:26px;transform:rotate(3deg)}
+.eyebrow{font-family:var(--f-hand);font-size:1.35rem;color:var(--pink);line-height:1;margin:0 0 2px}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(2.1rem,7vw,3.4rem);
+   line-height:.95;margin:0 0 10px;letter-spacing:-.02em;text-wrap:balance}
+.dek{margin:0;max-width:60ch;color:var(--ink-soft);font-size:.98rem}
+.stamp{
+  display:inline-block;margin-top:14px;font-family:var(--f-body);font-weight:700;
+  font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);
+  border:1.5px solid var(--pink);border-radius:2px;padding:4px 9px;transform:rotate(-1.5deg);
+}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.tab{
+  font-family:var(--f-body);font-weight:700;font-size:.78rem;letter-spacing:.07em;
+  text-transform:uppercase;cursor:pointer;background:var(--paper);color:var(--ink-soft);
+  border:1px solid var(--rule);border-bottom-width:3px;border-radius:3px;
+  padding:9px 15px;box-shadow:0 5px 14px -11px var(--shadow);
+}
+.tab:nth-child(1){transform:rotate(-1deg)}
+.tab:nth-child(3){transform:rotate(1deg)}
+.tab[aria-selected="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.tab:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px}
+
+/* ---------- paper cards ---------- */
+.scrap{
+  position:relative;background:var(--paper);border:1px solid var(--rule);border-radius:3px;
+  box-shadow:0 12px 26px -18px var(--shadow);padding:22px;margin-bottom:16px;
+}
+.scrap.tilt{transform:rotate(-.35deg)}
+.scrap.tilt-r{transform:rotate(.4deg)}
+.scrap h2{font-family:var(--f-display);font-weight:600;font-size:1.45rem;margin:0 0 6px;letter-spacing:-.01em}
+.scrap h3{font-family:var(--f-display);font-weight:600;font-size:1.1rem;margin:0 0 8px}
+.note{font-family:var(--f-hand);font-size:1.22rem;color:var(--pink);line-height:1.25;margin:0 0 10px}
+.muted{color:var(--ink-soft);font-size:.9rem}
+.hr{height:1px;background:var(--rule);border:0;margin:18px 0}
+
+/* ---------- quiz ---------- */
+.progress{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.bar{flex:1;height:9px;background:#FAEBF0;border:1px solid var(--rule);border-radius:99px;overflow:hidden;min-width:0}
+.bar span{display:block;height:100%;background:var(--pink);width:0;transition:width .3s ease}
+.count{font-family:var(--f-body);font-weight:700;font-size:.74rem;letter-spacing:.1em;color:var(--ink-soft);white-space:nowrap}
+.qdim{font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);margin:0 0 8px}
+.qtext{font-family:var(--f-display);font-weight:600;font-size:clamp(1.3rem,4.4vw,1.85rem);
+       line-height:1.2;margin:0 0 20px;text-wrap:balance}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.opts{grid-template-columns:1fr}}
+.opt{
+  text-align:left;cursor:pointer;font-family:var(--f-body);font-size:1rem;color:var(--ink);
+  background:#fff;border:1.5px solid var(--rule);border-radius:3px;padding:16px 15px;
+  box-shadow:0 6px 16px -14px var(--shadow);min-width:0;
+}
+.opt:hover{border-color:var(--pink);background:#FFF6F9}
+.opt:focus-visible{outline:2.5px solid var(--pink);outline-offset:2px}
+.opt b{display:block;font-family:var(--f-display);font-weight:600;font-size:1.08rem;margin-bottom:4px}
+.opt .sub{font-size:.84rem;color:var(--ink-soft);line-height:1.4}
+.opt .pick{font-family:var(--f-hand);font-size:1.1rem;color:var(--pink);display:block;margin-bottom:2px}
+.scene{display:block;width:100%;height:auto;aspect-ratio:3/2;border:1px solid var(--rule);
+       border-radius:2px;margin-bottom:12px;max-width:100%}
+.scene-a{--i-bg:#FFEDF3;--i-1:#E8679A;--i-2:#F9CBDC;--i-3:#C92E64;--i-ink:#4A2430}
+.scene-b{--i-bg:#E6F2EC;--i-1:#5FA98B;--i-2:#BFDFCF;--i-3:#2C7458;--i-ink:#22413A}
+.opt[data-v="B"] .pick{color:#2C7458}
+.opt[data-v="B"]:hover{border-color:#3F8D6E;background:#F3FAF6}
+.backlink{background:none;border:0;cursor:pointer;color:var(--ink-soft);font-family:var(--f-body);
+          font-size:.82rem;padding:0;margin-top:16px;text-decoration:underline}
+
+/* ---------- reveal (industry) ---------- */
+.reveal{border-left:4px solid var(--pink);background:#FFF4F7;padding:16px 16px 16px 15px;border-radius:3px;margin-top:18px}
+.reveal .lead{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0 0 10px}
+textarea{
+  width:100%;min-height:86px;font-family:var(--f-body);font-size:.95rem;color:var(--ink);
+  background:#fff;border:1.5px solid var(--rule);border-radius:3px;padding:11px;resize:vertical;
+}
+textarea:focus-visible,input:focus-visible{outline:2.5px solid var(--pink);outline-offset:1px}
+
+/* ---------- split bars ---------- */
+.split{margin:10px 0 14px}
+.split-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.split-key{width:92px;flex:none;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+@media(max-width:480px){.split-key{width:64px;font-size:.62rem}}
+.split-track{flex:1;min-width:0;height:26px;background:var(--pink-soft);border-radius:2px;display:flex;overflow:hidden;border:1px solid var(--rule)}
+.split-a{background:var(--pink);height:100%}
+.split-b{background:var(--mint);height:100%}
+.split-track span{display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;
+                  color:#fff;font-variant-numeric:tabular-nums;overflow:hidden;white-space:nowrap}
+.split-b span{color:#1F3D33}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--ink-soft);margin-top:6px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- scorecard ---------- */
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.score{background:#fff;border:1px solid var(--rule);border-radius:3px;padding:15px;min-width:0}
+.score .n{font-family:var(--f-display);font-weight:900;font-size:2.2rem;line-height:1;color:var(--pink);
+          font-variant-numeric:tabular-nums}
+.score .l{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:7px}
+.score .d{font-size:.8rem;color:var(--ink-soft);margin-top:5px;line-height:1.35}
+
+/* ---------- dimension bars ---------- */
+.dim{margin-bottom:15px}
+.dim-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.dim-head b{font-family:var(--f-display);font-weight:600;font-size:1rem}
+.dim-head em{font-style:normal;font-size:.75rem;font-weight:700;color:var(--pink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dim-track{height:12px;background:var(--pink-soft);border-radius:99px;overflow:hidden}
+.dim-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--pink))}
+.dim-note{font-size:.8rem;color:var(--ink-soft);margin-top:4px}
+
+/* ---------- table ---------- */
+.tscroll{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.86rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:.64rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft)}
+td.num{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+tr.hot td.num{color:var(--pink)}
+
+/* ---------- forms / buttons ---------- */
+.btn{
+  font-family:var(--f-body);font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;background:var(--pink);color:#fff;border:0;border-radius:3px;padding:12px 20px;
+  box-shadow:0 7px 16px -10px var(--shadow);
+}
+.btn:hover{background:#B82A5B}
+.btn:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--pink);border:1.5px solid var(--pink)}
+.btn.ghost:hover{background:var(--pink-soft)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+input[type=email],input[type=text]{
+  flex:1;min-width:190px;font-family:var(--f-body);font-size:.95rem;color:var(--ink);background:#fff;
+  border:1.5px solid var(--rule);border-radius:3px;padding:12px;
+}
+label.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--ink-soft);margin-bottom:6px}
+.ok{font-family:var(--f-hand);font-size:1.25rem;color:var(--pink);margin-top:10px}
+
+/* ---------- misc ---------- */
+.pin{position:absolute;top:-7px;left:50%;width:14px;height:14px;border-radius:50%;
+     background:var(--pink);box-shadow:0 2px 4px -1px var(--shadow);transform:translateX(-50%)}
+.toggle{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--ink-soft);cursor:pointer}
+.foot{text-align:center;font-family:var(--f-hand);font-size:1.15rem;color:var(--ink-soft);margin-top:26px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Marketing Club presents</p>
+    <h1>The Gap</h1>
+    <p class="dek">Eighteen questions with no right answer. Campus answers them. Industry answers them. We publish where the two disagree.</p>
+    <span class="stamp">Field study &middot; GLC 4.0</span>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-campus" aria-selected="true" aria-controls="view-campus">I'm a student</button>
+    <button class="tab" role="tab" id="tab-industry" aria-selected="false" aria-controls="view-industry">I'm from industry</button>
+    <button class="tab" role="tab" id="tab-research" aria-selected="false" aria-controls="view-research">The research</button>
+  </div>
+
+  <section id="view-campus" role="tabpanel" aria-labelledby="tab-campus"></section>
+  <section id="view-industry" role="tabpanel" aria-labelledby="tab-industry" hidden></section>
+  <section id="view-research" role="tabpanel" aria-labelledby="tab-research" hidden></section>
+
+  <p class="foot">pinned together by the Marketing Club</p>
+</div>
+
+<script>
+/* ============================ QUESTIONS ============================ */
+const DIMS = {
+  brand:  "Brand vs Performance",
+  trust:  "Trust & Authority",
+  risk:   "Risk Appetite",
+  channel:"Channel Philosophy",
+  proof:  "Measurement & Proof"
+};
+
+/* seedI / seedC = share picking option A, in the sample baseline only.
+   These are placeholders for the club's own collected data. */
+const Q = [
+{id:"q1",dim:"brand",t:"One loyal customer for ten years, or ten million people who watch once and forget?",
+ a:{l:"The loyal customer",s:"Depth over reach. Retention is the business."},
+ b:{l:"The ten million",s:"Reach creates everything else downstream."},
+ seedI:71,seedC:38,
+ why:"Campus leans toward reach here. What do they see about attention today that your retention models might be slow to price in?"},
+
+{id:"q2",dim:"trust",t:"A product recommendation lands harder from the brand, or from a creator you follow?",
+ a:{l:"The brand",s:"It carries accountability and a track record."},
+ b:{l:"The creator",s:"A person can be trusted; a logo can't."},
+ seedI:52,seedC:12,
+ why:"Campus overwhelmingly trusts the creator. What does that cost a brand that has spent decades building its own name?"},
+
+{id:"q3",dim:"brand",t:"Brand loyalty in 2026 — real preference, or just friction nobody bothered to remove?",
+ a:{l:"Real preference",s:"People genuinely want the brands they want."},
+ b:{l:"Mostly friction",s:"Habit, defaults and switching cost dressed up as love."},
+ seedI:64,seedC:27,
+ why:"Campus calls most loyalty friction. If they're right, what in your current loyalty spend is buying nothing?"},
+
+{id:"q4",dim:"risk",t:"You can fix the product or fix the message. Budget for one.",
+ a:{l:"Fix the product",s:"Marketing can't outrun a bad experience."},
+ b:{l:"Fix the message",s:"Great products die of bad positioning every day."},
+ seedI:58,seedC:81,
+ why:"Campus goes harder on the product than industry does. What have you seen a message actually rescue?"},
+
+{id:"q5",dim:"proof",t:"Quarter closes in three weeks and you're short. Cut brand spend?",
+ a:{l:"Cut it",s:"The number is the number. Brand recovers."},
+ b:{l:"Protect it",s:"You'd be eating next year to pay for this one."},
+ seedI:44,seedC:19,
+ why:"Campus protects brand spend far more readily. Is that naivety about quarterly pressure, or clarity you lose once you're inside it?"},
+
+{id:"q6",dim:"risk",t:"AI-generated creative in a flagship campaign — ship it or don't?",
+ a:{l:"Ship it",s:"If the work is good, the tool doesn't matter."},
+ b:{l:"Don't",s:"The audience will find out, and that's the story."},
+ seedI:49,seedC:66,
+ why:"Campus is more comfortable shipping AI creative than industry is. They're also the audience. What does that tell you?"},
+
+{id:"q7",dim:"channel",t:"Be present on every platform, or own one completely?",
+ a:{l:"Every platform",s:"You can't win where you aren't."},
+ b:{l:"Own one",s:"Spread thin is the same as absent."},
+ seedI:41,seedC:74,
+ why:"Campus wants concentration. What breaks when a brand your size picks one platform and ignores the rest?"},
+
+{id:"q8",dim:"trust",t:"Twenty lakh on one celebrity, or twenty lakh across two hundred micro-creators?",
+ a:{l:"The celebrity",s:"One name, instant scale, controlled message."},
+ b:{l:"Two hundred creators",s:"Two hundred rooms you'd otherwise never enter."},
+ seedI:46,seedC:17,
+ why:"Campus splits the money. What's the operational reason that's harder than it sounds?"},
+
+{id:"q9",dim:"risk",t:"Polished studio film, or a shaky phone video shot by an actual customer?",
+ a:{l:"The polished film",s:"Production value signals the brand is serious."},
+ b:{l:"The phone video",s:"Rough reads as true. Polish reads as paid."},
+ seedI:55,seedC:21,
+ why:"Campus reads polish as a tell. At what point does low production stop signalling honesty and start signalling a brand that's given up?"},
+
+{id:"q10",dim:"risk",t:"Should a brand take a public position on a divisive social issue?",
+ a:{l:"Yes, take it",s:"Silence is a position too, and people read it."},
+ b:{l:"Stay out",s:"You'll lose half the room and convince nobody."},
+ seedI:34,seedC:63,
+ why:"Campus wants brands to speak. What have you watched go wrong when they do?"},
+
+{id:"q11",dim:"proof",t:"Something went viral. Strategy, or luck you'll take credit for?",
+ a:{l:"Strategy",s:"It's repeatable if you know what you did."},
+ b:{l:"Luck",s:"Nobody has reproduced it on demand, ever."},
+ seedI:57,seedC:29,
+ why:"Campus calls virality luck. If they're right, what should a content budget actually be buying?"},
+
+{id:"q12",dim:"channel",t:"Build your own channel, or go where the audience already is?",
+ a:{l:"Build your own",s:"A rented audience can be taken away overnight."},
+ b:{l:"Go where they are",s:"Nobody is opening your app. They're on their feed."},
+ seedI:62,seedC:33,
+ why:"Campus says go to the feed. How long do you think an owned channel stays worth the cost of building it?"},
+
+{id:"q13",dim:"proof",t:"Marketing spend you cannot attribute — investment, or waste?",
+ a:{l:"Investment",s:"The most valuable effects are the hardest to measure."},
+ b:{l:"Waste",s:"If you can't see it working, you can't claim it is."},
+ seedI:69,seedC:42,
+ why:"Campus is more willing to call unmeasured spend waste than industry is. Are they being rigorous, or missing something?"},
+
+{id:"q14",dim:"brand",t:"Discount to win a new customer, or hold price and lose them?",
+ a:{l:"Discount",s:"Get them in. Make the margin back later."},
+ b:{l:"Hold price",s:"A discount-acquired customer leaves at the next discount."},
+ seedI:37,seedC:58,
+ why:"Campus discounts more readily. What does a generation raised on coupon codes understand about price that your models may not?"},
+
+{id:"q15",dim:"trust",t:"Founder as the face of the brand — asset or liability?",
+ a:{l:"Asset",s:"People follow people. It's the cheapest trust you'll ever buy."},
+ b:{l:"Liability",s:"You've tied company valuation to one person's worst day."},
+ seedI:48,seedC:72,
+ why:"Campus sees the founder as an asset. What's the risk they haven't had to live through yet?"},
+
+{id:"q16",dim:"brand",t:"Nostalgia campaigns — a real strategy, or running out of ideas?",
+ a:{l:"Real strategy",s:"Memory is the cheapest shortcut to feeling."},
+ b:{l:"Out of ideas",s:"It's borrowing equity instead of building any."},
+ seedI:66,seedC:44,
+ why:"Campus is more sceptical of nostalgia than industry is — and much of it is aimed at them. Why might it be landing differently than intended?"},
+
+{id:"q17",dim:"trust",t:"Do people actually care about data privacy, or only say they do?",
+ a:{l:"They actually care",s:"The behaviour is changing, slowly but it's changing."},
+ b:{l:"Only say it",s:"Stated preference, revealed preference. They click accept."},
+ seedI:31,seedC:56,
+ why:"Campus says people genuinely care. They're the ones being tracked. What would change in your stack if they're right?"},
+
+{id:"q18",dim:"channel",t:"Launch rough and fix it in public, or hold until it's finished?",
+ a:{l:"Launch rough",s:"The market tells you things no internal review will."},
+ b:{l:"Hold it",s:"You only get one first impression and it's permanent."},
+ seedI:53,seedC:76,
+ why:"Campus is far more willing to launch unfinished. Is that speed you've lost, or a lesson they haven't had yet?"}
+];
+
+/* ============================ SCENES ============================ */
+/* Flat cut-paper illustrations, 120x80. Colour comes from CSS vars so the
+   same scene language reads pink on option A and green on option B. */
+const C1='var(--i-1)',C2='var(--i-2)',C3='var(--i-3)',CK='var(--i-ink)',CB='var(--i-bg)';
+const P=(x,y,r,c,h)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/><path d="M${x-1.5*r} ${h}a${1.5*r} ${1.9*r} 0 0 1 ${3*r} 0z" fill="${c}"/>`;
+const G=`<rect width="120" height="80" fill="${CB}"/><rect y="66" width="120" height="14" fill="${C2}"/>`;
+const DESK=`<rect x="12" y="53" width="96" height="5" fill="${CK}" opacity=".28"/>`;
+const STAGE=`<rect x="32" y="56" width="56" height="6" fill="${CK}" opacity=".28"/>`;
+
+const SCENES={
+/* 1 — loyal customer / heavy crowd */
+q1a:G+`<rect x="74" y="10" width="42" height="3.5" fill="${C2}"/><rect x="80" y="2" width="7" height="8" fill="${C2}"/><rect x="91" y="0" width="7" height="10" fill="${C2}"/><rect x="102" y="3" width="7" height="7" fill="${C2}"/>`
+ +P(96,44,7,C1,64)+`<rect x="48" y="50" width="34" height="16" rx="2" fill="${C3}"/><rect x="45" y="45" width="40" height="5" rx="2" fill="${CK}" opacity=".3"/>`
+ +P(28,44,7.5,C3,66)+`<path d="M62 25c-2.4-2.6-6.6-.9-6.6 2.2 0 3 4.3 5.7 6.6 7.2 2.3-1.5 6.6-4.2 6.6-7.2 0-3.1-4.2-4.8-6.6-2.2z" fill="${C1}"/>`,
+q1b:G+`<rect x="6" y="8" width="108" height="3.5" fill="${C2}"/>`
+ +P(14,40,5,C2,58)+P(32,38,5,C2,58)+P(50,40,5,C2,58)+P(68,38,5,C2,58)+P(86,40,5,C2,58)+P(104,38,5,C2,58)
+ +P(16,46,6.5,C1,70)+P(40,44,6.5,C3,70)+P(62,46,6.5,C1,70)+P(84,44,6.5,C3,70)+P(106,46,6.5,C1,70),
+
+/* 2 — the brand / the creator */
+q2a:G+`<rect x="16" y="32" width="88" height="34" fill="${C2}"/><path d="M12 32h96l-7-10H19z" fill="${C1}"/>`
+ +`<rect x="52" y="46" width="16" height="20" fill="${C3}"/><rect x="24" y="38" width="16" height="10" fill="${CB}"/><rect x="80" y="38" width="16" height="10" fill="${CB}"/>`
+ +`<path d="M60 0 73 4.5v7.5c0 6.4-5.6 10.6-13 12.4C52.6 22.6 47 18.4 47 12V4.5z" fill="${C3}"/><path d="m54 11.5 4 4 7.5-8" stroke="${CB}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+q2b:G+`<circle cx="96" cy="24" r="12" fill="${C2}"/><circle cx="96" cy="24" r="6" fill="${CB}"/><rect x="94" y="36" width="4" height="30" fill="${C2}"/>`
+ +P(32,40,9,C1,66)+`<path d="M41 46h10" stroke="${C1}" stroke-width="5" stroke-linecap="round"/>`
+ +`<rect x="56" y="28" width="20" height="32" rx="3" fill="${C3}"/><rect x="59" y="32" width="14" height="22" rx="1" fill="${CB}"/><circle cx="66" cy="39" r="3.2" fill="${C1}"/><path d="M60 54c0-3.3 2.7-5.6 6-5.6s6 2.3 6 5.6z" fill="${C1}"/>`,
+
+/* 3 — real preference / friction */
+q3a:G+`<rect x="4" y="36" width="58" height="4.5" fill="${C2}"/>`
+ +`<rect x="9" y="22" width="14" height="14" rx="1.5" fill="${C2}"/><rect x="27" y="17" width="14" height="19" rx="1.5" fill="${C3}"/><rect x="45" y="24" width="14" height="12" rx="1.5" fill="${C2}"/>`
+ +`<path d="M34 4c-2.5-2.7-6.8-.9-6.8 2.3 0 3.1 4.4 5.8 6.8 7.4 2.4-1.6 6.8-4.3 6.8-7.4 0-3.2-4.3-5-6.8-2.3z" fill="${C1}"/>`
+ +P(88,42,8,C1,66)+`<path d="M79 48H62" stroke="${C1}" stroke-width="5" stroke-linecap="round"/>`,
+q3b:G+`<rect x="72" y="24" width="44" height="42" fill="${C2}"/><rect x="86" y="40" width="16" height="26" fill="${C3}"/><rect x="88" y="48" width="12" height="11" rx="2" fill="${CK}" opacity=".4"/>`
+ +P(26,44,8,C1,66)+`<path d="M38 53h32" stroke="${C3}" stroke-width="3" stroke-dasharray="5 3"/><circle cx="44" cy="53" r="4.5" fill="none" stroke="${C3}" stroke-width="2.5"/><circle cx="58" cy="53" r="4.5" fill="none" stroke="${C3}" stroke-width="2.5"/>`,
+
+/* 4 — fix the product / fix the message */
+q4a:G+DESK+`<path d="M62 18 86 29v16L62 56 38 45V29z" fill="${C2}"/><path d="M38 29 62 40l24-11M62 40v16" stroke="${CB}" stroke-width="2" fill="none"/>`
+ +P(20,30,7,C1,53)+`<path d="M104 14a6.5 6.5 0 0 0-8.6 7.6L83 34l4.6 4.6 12.4-12.4A6.5 6.5 0 0 0 107 17.4l-4.2 4.2-3.4-3.4z" fill="${C3}"/>`,
+q4b:G+`<rect x="46" y="10" width="58" height="38" fill="${C2}"/><rect x="52" y="18" width="36" height="5" fill="${C3}"/><rect x="52" y="28" width="46" height="4" fill="${CB}"/><rect x="52" y="36" width="28" height="4" fill="${CB}"/>`
+ +`<path d="M50 48 44 66M100 48l6 18" stroke="${CK}" stroke-width="2.5" opacity=".35"/>`
+ +P(22,42,8,C1,66)+`<path d="M4 24h5l15-8v19l-15-7H4z" fill="${C3}"/>`,
+
+/* 5 — cut it / protect it */
+q5a:G+`<rect x="12" y="42" width="13" height="24" fill="${C2}"/><rect x="31" y="34" width="13" height="32" fill="${C2}"/><rect x="50" y="48" width="13" height="18" fill="${C2}"/>`
+ +`<path d="M6 30h64" stroke="${C3}" stroke-width="2.5" stroke-dasharray="6 4"/>`
+ +`<circle cx="94" cy="18" r="6" fill="none" stroke="${C3}" stroke-width="3"/><circle cx="94" cy="42" r="6" fill="none" stroke="${C3}" stroke-width="3"/><path d="M89 21 70 30M89 39 70 30" stroke="${C3}" stroke-width="3" stroke-linecap="round"/>`,
+q5b:G+`<path d="M10 4v10M26 0v10M96 2v10M110 8v10" stroke="${C2}" stroke-width="3.5" stroke-linecap="round"/>`
+ +`<path d="M16 38a42 42 0 0 1 84 0z" fill="${C1}"/><path d="M57 38v22" stroke="${C3}" stroke-width="3.5"/><path d="M57 60a7 7 0 0 0 12 3" stroke="${C3}" stroke-width="3.5" fill="none"/>`
+ +`<rect x="76" y="48" width="18" height="18" rx="2" fill="${C3}"/><path d="M85 52v10M80 57h10" stroke="${CB}" stroke-width="2.5"/>`,
+
+/* 6 — ship the AI work / keep it human */
+q6a:G+`<rect x="30" y="12" width="60" height="40" rx="3" fill="${C2}"/><rect x="52" y="52" width="16" height="6" fill="${C2}"/><rect x="40" y="58" width="40" height="4" rx="2" fill="${C2}"/>`
+ +`<path d="M60 18l3.6 9.2L73 31l-9.4 3.8L60 44l-3.6-9.2L47 31l9.4-3.8z" fill="${C3}"/>`
+ +`<path d="M8 66V32l14-10" stroke="${C1}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="21" r="5" fill="${C1}"/>`
+ +`<path d="M112 66V32L98 22" stroke="${C1}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="96" cy="21" r="5" fill="${C1}"/>`,
+q6b:G+DESK+`<rect x="24" y="26" width="48" height="27" fill="${CB}" stroke="${C2}" stroke-width="2"/><path d="M32 45c6-11 12 2 18-9s10 5 14-6" stroke="${C3}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+ +P(94,30,8,C1,53)+`<path d="M86 38 74 46" stroke="${C1}" stroke-width="5.5" stroke-linecap="round"/><path d="M76 49 67 40l-4 11z" fill="${C3}"/>`,
+
+/* 7 — every platform / own one */
+q7a:G+`<rect x="2" y="8" width="24" height="17" rx="2.5" fill="${C2}"/><rect x="32" y="2" width="24" height="17" rx="2.5" fill="${C2}"/><rect x="64" y="2" width="24" height="17" rx="2.5" fill="${C2}"/><rect x="94" y="8" width="24" height="17" rx="2.5" fill="${C2}"/>`
+ +`<rect x="4" y="33" width="21" height="15" rx="2.5" fill="${C3}"/><rect x="95" y="33" width="21" height="15" rx="2.5" fill="${C3}"/>`
+ +`<path d="M52 44 28 26M68 44l24-18M58 36V21M64 36l12-16" stroke="${C2}" stroke-width="2"/>`+P(60,46,8,C1,66),
+q7b:G+`<rect x="22" y="10" width="76" height="46" rx="3" fill="${C2}"/><rect x="52" y="56" width="16" height="6" fill="${C2}"/>`
+ +`<path d="M58 52V14" stroke="${C3}" stroke-width="3.5"/><path d="M58 16h28l-5.5 7.5L86 31H58z" fill="${C3}"/>`+P(104,48,6,C1,66),
+
+/* 8 — one celebrity / two hundred creators */
+q8a:G+`<path d="M44 0 24 56h72L76 0z" fill="${C2}" opacity=".5"/>`+STAGE+P(60,28,11,C3,56)
+ +P(10,54,5,C1,70)+P(26,56,5,C1,70)+P(94,56,5,C1,70)+P(110,54,5,C1,70),
+q8b:`<rect width="120" height="80" fill="${CB}"/>`
+ +[[6,5],[46,5],[86,5],[6,43],[46,43],[86,43]].map(([x,y],i)=>
+   `<rect x="${x}" y="${y}" width="28" height="32" rx="3.5" fill="${i%2?C2:C3}"/>`
+   +`<circle cx="${x+14}" cy="${y+13}" r="5" fill="${CB}"/><path d="M${x+6} ${y+28}a8 9.5 0 0 1 16 0z" fill="${CB}"/>`).join(''),
+
+/* 9 — polished film / phone video */
+q9a:G+`<path d="M44 66 56 42M74 66 62 42" stroke="${CK}" stroke-width="3" opacity=".35"/>`
+ +`<rect x="38" y="24" width="38" height="20" rx="3" fill="${C1}"/><path d="M76 29l14-7v18l-14-7z" fill="${C1}"/>`
+ +`<circle cx="48" cy="18" r="7" fill="none" stroke="${C1}" stroke-width="3"/><circle cx="66" cy="18" r="7" fill="none" stroke="${C1}" stroke-width="3"/>`
+ +`<rect x="98" y="12" width="18" height="13" rx="2" fill="${C3}"/><path d="M107 25v41M98 66h18" stroke="${C3}" stroke-width="3"/>`,
+q9b:G+`<path d="M24 22c4 4 4 9 0 13M32 17c6 7 6 16 0 23M96 22c-4 4-4 9 0 13M88 17c-6 7-6 16 0 23" stroke="${C2}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+ +`<rect x="42" y="8" width="36" height="58" rx="6" fill="${C1}"/><rect x="46" y="15" width="28" height="43" rx="2" fill="${CB}"/>`
+ +`<circle cx="60" cy="29" r="6.5" fill="${C3}"/><path d="M50 53a10 12 0 0 1 20 0z" fill="${C3}"/>`,
+
+/* 10 — take the position / stay out */
+q10a:G+`<rect x="42" y="56" width="32" height="10" fill="${C2}"/>`+P(58,32,8,C1,56)
+ +`<path d="M67 27h4l13-6v16l-13-6h-4z" fill="${C3}"/>`
+ +`<rect x="10" y="12" width="24" height="19" fill="${C3}"/><path d="M22 31v35" stroke="${C3}" stroke-width="3"/><path d="M16 19h12M16 25h8" stroke="${CB}" stroke-width="2.5"/>`,
+q10b:G+`<rect x="24" y="28" width="68" height="38" fill="${C2}"/><path d="M24 34h68M24 42h68M24 50h68M24 58h68" stroke="${CB}" stroke-width="3"/>`
+ +`<path d="M64 2h44a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5H80l-8 6v-6h-8a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" fill="${C3}"/><path d="M66 3 111 26" stroke="${CB}" stroke-width="3.5"/>`,
+
+/* 11 — strategy / luck */
+q11a:G+`<rect x="28" y="6" width="80" height="48" fill="${CB}" stroke="${C2}" stroke-width="3"/>`
+ +`<path d="M36 46 50 33l10 8 24-24" stroke="${C3}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M72 17h12v12" stroke="${C3}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+ +P(13,40,7,C1,66)+`<path d="M20 46h11" stroke="${C1}" stroke-width="4.5" stroke-linecap="round"/>`,
+q11b:G+`<path d="M4 58 16 40l10 15 12-34 10 28 12-22 10 19 10-32" stroke="${C2}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+ +`<g transform="translate(36,24) rotate(-12)"><rect width="30" height="30" rx="5" fill="${C3}"/><circle cx="9" cy="9" r="3" fill="${CB}"/><circle cx="21" cy="9" r="3" fill="${CB}"/><circle cx="9" cy="21" r="3" fill="${CB}"/><circle cx="21" cy="21" r="3" fill="${CB}"/></g>`
+ +`<g transform="translate(76,38) rotate(14)"><rect width="22" height="22" rx="4" fill="${C1}"/><circle cx="11" cy="11" r="3.2" fill="${CB}"/></g>`,
+
+/* 12 — build your own / go where they are */
+q12a:G+`<path d="M34 32 64 12l30 20" stroke="${C3}" stroke-width="4" fill="none" stroke-linejoin="round"/>`
+ +`<rect x="40" y="32" width="48" height="34" fill="${C2}"/><path d="M40 40h48M40 48h48M40 58h48M52 32v8M76 40v8M64 48v10" stroke="${CB}" stroke-width="2"/>`
+ +P(16,42,7,C1,66)+`<rect x="22" y="45" width="13" height="7" rx="1" fill="${C3}"/>`,
+q12b:G+P(10,46,6,C2,66)+P(28,44,6,C2,66)+P(92,44,6,C2,66)+P(110,46,6,C2,66)
+ +`<rect x="42" y="36" width="36" height="30" fill="${C1}"/><path d="M38 36h44l-6-11H44z" fill="${C3}"/>`+P(60,28,6,C3,36)
+ +`<rect x="50" y="48" width="20" height="18" fill="${CB}"/>`,
+
+/* 13 — long investment / unmeasured waste */
+q13a:G+`<path d="M22 66v-9" stroke="${C3}" stroke-width="2.5"/><ellipse cx="15" cy="55" rx="8" ry="4.5" fill="${C2}"/>`
+ +`<path d="M58 66V44" stroke="${C3}" stroke-width="3"/><ellipse cx="48" cy="42" rx="9.5" ry="5" fill="${C2}"/><ellipse cx="68" cy="38" rx="9.5" ry="5" fill="${C1}"/>`
+ +`<path d="M98 66V32" stroke="${C3}" stroke-width="4"/><circle cx="98" cy="24" r="15" fill="${C1}"/>`,
+q13b:G+`<g transform="translate(16,2) rotate(-18)"><rect width="20" height="14" rx="1.5" fill="${C1}"/></g><g transform="translate(50,0) rotate(7)"><rect width="20" height="14" rx="1.5" fill="${C3}"/></g><g transform="translate(82,4) rotate(17)"><rect width="20" height="14" rx="1.5" fill="${C1}"/></g>`
+ +`<rect x="32" y="26" width="56" height="7" rx="2.5" fill="${C3}"/><path d="M37 33h46l-4 33H41z" fill="${C2}"/><path d="M52 40v20M68 40v20" stroke="${CB}" stroke-width="2.5"/>`,
+
+/* 14 — discount / hold price */
+q14a:G+`<path d="M56 6h48v34L78 68 42 34z" fill="${C3}"/><circle cx="92" cy="19" r="4.5" fill="${CB}"/>`
+ +`<circle cx="68" cy="32" r="4.5" fill="none" stroke="${CB}" stroke-width="2.5"/><circle cx="84" cy="47" r="4.5" fill="none" stroke="${CB}" stroke-width="2.5"/><path d="M86 28 66 51" stroke="${CB}" stroke-width="2.5"/>`
+ +P(10,46,6.5,C1,70)+P(28,44,6.5,C1,70),
+q14b:G+`<rect x="44" y="52" width="32" height="14" fill="${C2}"/><rect x="40" y="47" width="40" height="6" fill="${C2}"/>`
+ +`<rect x="50" y="24" width="20" height="24" rx="2.5" fill="${C3}"/>`
+ +`<path d="M84 10h26v18H84z" fill="${C1}"/><path d="M89 16h16M89 22h16" stroke="${CB}" stroke-width="2.5"/>`
+ +P(16,44,7,C1,66),
+
+/* 15 — founder as asset / as liability */
+q15a:G+STAGE+P(60,28,10,C3,56)+`<circle cx="60" cy="43" r="5.5" fill="${CB}"/>`
+ +`<path d="M16 22l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3zM102 14l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="${C1}"/>`,
+q15b:G+STAGE+`<path d="M48 62l5 4-4 5" stroke="${CB}" stroke-width="2.5" fill="none"/>`+P(60,28,10,C3,56)
+ +`<circle cx="60" cy="43" r="5.5" fill="${CB}"/><path d="M60 38.5l-2.2 4 3 1-2 4" stroke="${C3}" stroke-width="1.8" fill="none"/>`
+ +`<path d="M100 6 114 30H86z" fill="${C1}"/><path d="M100 14v8M100 26v.5" stroke="${CB}" stroke-width="2.5" stroke-linecap="round"/>`,
+
+/* 16 — nostalgia works / out of ideas */
+q16a:G+`<path d="M44 6l12 9M76 6 64 15" stroke="${C3}" stroke-width="2.5" stroke-linecap="round"/>`
+ +`<rect x="32" y="14" width="56" height="38" rx="4" fill="${C2}"/><rect x="38" y="20" width="34" height="26" rx="2" fill="${CB}"/><circle cx="80" cy="26" r="2.8" fill="${C3}"/><circle cx="80" cy="35" r="2.8" fill="${C3}"/>`
+ +`<path d="M55 29c-2.2-2.4-6-.8-6 2 0 2.8 4 5.3 6 6.7 2-1.4 6-3.9 6-6.7 0-2.8-3.8-4.4-6-2z" fill="${C1}"/><rect x="38" y="52" width="44" height="4" fill="${C2}"/>`
+ +P(12,48,6,C1,66)+P(108,48,6,C1,66),
+q16b:G+DESK+`<rect x="34" y="24" width="36" height="29" fill="${CB}" stroke="${C2}" stroke-width="2"/>`
+ +`<path d="M90 14a11 11 0 0 1 6.5 19.8V40H83.5v-6.2A11 11 0 0 1 90 14z" fill="${C2}"/><path d="M83.5 44h13M85.5 48.5h9" stroke="${C2}" stroke-width="2.5" stroke-linecap="round"/>`
+ +P(16,32,7,C1,53),
+
+/* 17 — they really care / they click accept */
+q17a:G+P(24,40,8.5,C1,66)+`<rect x="44" y="30" width="20" height="32" rx="3" fill="${C3}"/><rect x="47" y="34" width="14" height="22" rx="1" fill="${CB}"/>`
+ +`<path d="M90 10 110 16.5V28c0 8.6-7.8 14.6-20 17.8C77.8 42.6 70 36.6 70 28V16.5z" fill="${C3}"/>`
+ +`<rect x="84" y="24" width="12" height="10" rx="1.8" fill="${CB}"/><path d="M86.5 24v-3.4a3.5 3.5 0 0 1 7 0V24" stroke="${CB}" stroke-width="2.2" fill="none"/>`,
+q17b:G+`<rect x="30" y="14" width="66" height="42" rx="4" fill="${C2}"/><rect x="38" y="22" width="40" height="4.5" fill="${CB}"/><rect x="38" y="31" width="50" height="4.5" fill="${CB}"/>`
+ +`<rect x="56" y="42" width="32" height="11" rx="3.5" fill="${C3}"/>`
+ +`<path d="M86 49l5 16 8-9z" fill="${C1}"/>`+P(14,42,7,C1,66),
+
+/* 18 — launch rough / hold and polish */
+q18a:G+`<circle cx="26" cy="18" r="3.2" fill="${C3}"/><circle cx="94" cy="12" r="3.2" fill="${C3}"/><circle cx="20" cy="40" r="2.6" fill="${C3}"/><circle cx="102" cy="36" r="2.6" fill="${C3}"/>`
+ +`<path d="M60 2c9.5 8.5 13.5 18 13.5 28.5L60 40 46.5 30.5C46.5 20 50.5 10.5 60 2z" fill="${C1}"/><circle cx="60" cy="21" r="4.8" fill="${CB}"/>`
+ +`<path d="M46.5 35 37 48l10.5-4.5M73.5 35 83 48l-10.5-4.5z" fill="${C3}"/>`
+ +`<path d="M54 46c2 6 2 11 0 17M66 46c-2 6-2 11 0 17" stroke="${C2}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+q18b:G+DESK+`<path d="M44 18h22l11 14-22 23-22-23z" fill="${C3}"/><path d="M33 32h44M44 18l11 14M66 18 55 32M55 55 44 32M55 55 66 32" stroke="${CB}" stroke-width="2" fill="none"/>`
+ +`<path d="M94 12l2.8 7 7 2.8-7 2.8-2.8 7-2.8-7-7-2.8 7-2.8z" fill="${C1}"/>`
+ +P(16,34,7,C1,53)
+};
+
+function scene(qid,slot){
+  const key=qid+slot;
+  return `<svg class="scene scene-${slot}" viewBox="0 0 120 80" role="img" aria-hidden="true" focusable="false">${SCENES[key]||G}</svg>`;
+}
+
+/* ======================= SAMPLE BASELINE DATA ======================= */
+/* Clearly-labelled synthetic respondents so the dashboard is readable before
+   the club collects anything. Toggle off in the research view. */
+function buildSample(role,n,key){
+  const out=[];let s=role==="campus"?7919:3301;
+  const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};
+  for(let i=0;i<n;i++){
+    const ans={};
+    Q.forEach(q=>{ans[q.id]=rnd()*100<q[key]?"A":"B";});
+    out.push({role,answers:ans,why:{},sample:true});
+  }
+  return out;
+}
+const SAMPLE=[...buildSample("campus",312,"seedC"),...buildSample("industry",41,"seedI")];
+
+/* ============================ STORAGE ============================ */
+/* Responses POST to a Google Apps Script web app, which writes them into
+   your Google Sheet. Paste your deployment URL here — nothing else to change. */
+const ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+
+const KEY="gapstudy_v1";
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):[];}catch(e){return [];}}
+function save(list){try{localStorage.setItem(KEY,JSON.stringify(list));}catch(e){}}
+let LOCAL=load();
+let REMOTE=[],lastId=null,shareState="connecting",currentTab="campus";
+
+const wired=()=>/^https:\/\//.test(ENDPOINT);
+
+async function refresh(){
+  if(!wired()){shareState="off";return;}
+  try{
+    const r=await fetch(ENDPOINT+"?action=all",{method:"GET"});
+    const j=await r.json();
+    REMOTE=Array.isArray(j.responses)?j.responses:[];
+    shareState="on";
+  }catch(e){shareState="off";}
+  if(currentTab==="research")renderResearch();
+}
+
+async function post(payload){
+  return fetch(ENDPOINT,{
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload)
+  });
+}
+
+async function addResponse(r){
+  r.id="r_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);
+  if(wired()){
+    try{await post({action:"add",response:r});lastId=r.id;REMOTE.push(r);return;}
+    catch(e){}
+  }
+  lastId=null;LOCAL.push(r);save(LOCAL);
+}
+
+async function attachEmail(v){
+  if(lastId&&wired()){
+    try{await post({action:"email",id:lastId,email:v});return;}catch(e){}
+  }
+  const list=load();if(list.length){list[list.length-1].email=v;save(list);LOCAL=list;}
+}
+
+refresh();
+setInterval(refresh,20000);
+
+/* ============================ HELPERS ============================ */
+const el=(h)=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstElementChild;};
+const esc=(s)=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function collected(){return [...REMOTE,...LOCAL];}
+function pool(includeSample){
+  return includeSample?[...SAMPLE,...collected()]:collected();
+}
+function pctA(rows,qid){
+  const v=rows.filter(r=>r.answers&&r.answers[qid]);
+  if(!v.length)return null;
+  return Math.round(v.filter(r=>r.answers[qid]==="A").length/v.length*100);
+}
+function splitBar(label,p,na){
+  if(p===null)return `<div class="split-row"><div class="split-key">${label}</div>
+    <div class="split-track"><span style="flex:1;color:var(--ink-soft)">no responses yet</span></div></div>`;
+  return `<div class="split-row"><div class="split-key">${label}</div>
+    <div class="split-track">
+      <div class="split-a" style="width:${p}%"><span>${p>13?p+"%":""}</span></div>
+      <div class="split-b" style="width:${100-p}%"><span>${100-p>13?(100-p)+"%":""}</span></div>
+    </div></div>`;
+}
+
+/* ============================ QUIZ ENGINE ============================ */
+function Quiz(role,mount){
+  let i=0;const answers={};const why={};
+  const isInd=role==="industry";
+
+  function render(){
+    if(i>=Q.length){return results();}
+    const q=Q[i];
+    mount.innerHTML="";
+    const card=el(`<div class="scrap ${i%2?"tilt-r":"tilt"}">
+      <div class="progress">
+        <div class="bar"><span style="width:${(i/Q.length)*100}%"></span></div>
+        <div class="count">${String(i+1).padStart(2,"0")} / ${Q.length}</div>
+      </div>
+      <p class="qdim">${esc(DIMS[q.dim])}</p>
+      <p class="qtext">${esc(q.t)}</p>
+      <div class="opts">
+        <button class="opt" data-v="A">${scene(q.id,"a")}
+          <span class="pick">option A</span><b>${esc(q.a.l)}</b><span class="sub">${esc(q.a.s)}</span></button>
+        <button class="opt" data-v="B">${scene(q.id,"b")}
+          <span class="pick">option B</span><b>${esc(q.b.l)}</b><span class="sub">${esc(q.b.s)}</span></button>
+      </div>
+      <div class="slot"></div>
+      ${i>0?'<button class="backlink" data-back>&larr; back one</button>':""}
+    </div>`);
+    mount.appendChild(card);
+    card.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>pick(q,b.dataset.v,card)));
+    const back=card.querySelector("[data-back]");
+    if(back)back.addEventListener("click",()=>{i--;render();});
+    card.scrollIntoView({block:"nearest"});
+  }
+
+  function pick(q,v,card){
+    answers[q.id]=v;
+    const rows=pool(true);
+    const campus=pctA(rows.filter(r=>r.role==="campus"),q.id);
+    const diverges = campus!==null && ((v==="A"&&campus<45)||(v==="B"&&campus>55));
+
+    if(isInd&&diverges){
+      card.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+      const slot=card.querySelector(".slot");
+      slot.innerHTML=`<div class="reveal">
+        <p class="lead">You picked ${v}. Campus went the other way — ${v==="A"?100-campus:campus}% of them.</p>
+        <div class="split">${splitBar("Campus",campus)}</div>
+        <p style="margin:0 0 9px;font-size:.93rem">${esc(q.why)}</p>
+        <label class="fl" for="why-${q.id}">Your read</label>
+        <textarea id="why-${q.id}" placeholder="A sentence is plenty."></textarea>
+        <div class="row"><button class="btn" data-next>Next question</button>
+        <button class="btn ghost" data-skip>Skip</button></div>
+      </div>`;
+      const ta=slot.querySelector("textarea");
+      slot.querySelector("[data-next]").addEventListener("click",()=>{why[q.id]=ta.value.trim();i++;render();});
+      slot.querySelector("[data-skip]").addEventListener("click",()=>{i++;render();});
+      ta.focus();
+    }else{i++;render();}
+  }
+
+  function results(){
+    const rows=pool(true);
+    const indRows=rows.filter(r=>r.role==="industry");
+    const camRows=rows.filter(r=>r.role==="campus");
+    const compareTo=isInd?camRows:indRows;
+    const otherName=isInd?"campus":"industry";
+
+    let matched=0,scored=0;
+    const perDim={};Object.keys(DIMS).forEach(k=>perDim[k]={gap:0,n:0});
+    const lines=[];
+    Q.forEach(q=>{
+      const o=pctA(compareTo,q.id);if(o===null)return;
+      const mine=answers[q.id];
+      const majority=o>=50?"A":"B";
+      scored++;if(mine===majority)matched++;
+      const dist=mine==="A"?100-o:o;
+      perDim[q.dim].gap+=dist;perDim[q.dim].n++;
+      lines.push({q,o,mine,dist});
+    });
+    const align=scored?Math.round(matched/scored*100):0;
+    lines.sort((a,b)=>b.dist-a.dist);
+    const top=lines.slice(0,4);
+
+    addResponse({role,answers,why,ts:Date.now()});
+
+    const dimHtml=Object.keys(DIMS).map(k=>{
+      const d=perDim[k];if(!d.n)return "";
+      const avg=Math.round(d.gap/d.n);
+      return `<div class="dim">
+        <div class="dim-head"><b>${esc(DIMS[k])}</b><em>${avg}% apart</em></div>
+        <div class="dim-track"><div class="dim-fill" style="width:${avg}%"></div></div>
+        <p class="dim-note">${avg>55?"You sit on the opposite side of "+otherName+" here.":avg>40?"Split down the middle.":"You and "+otherName+" broadly agree."}</p>
+      </div>`;}).join("");
+
+    const topHtml=top.map(x=>`<div class="scrap" style="padding:16px;margin-bottom:10px;box-shadow:none">
+        <p class="qdim">${esc(DIMS[x.q.dim])}</p>
+        <h3 style="font-size:1rem;margin-bottom:9px">${esc(x.q.t)}</h3>
+        <p class="muted" style="margin:0 0 8px">You said <b style="color:var(--pink)">${esc(x.mine==="A"?x.q.a.l:x.q.b.l)}</b>.
+        ${x.dist}% of ${otherName} said the opposite.</p>
+        <div class="split">${splitBar(otherName==="campus"?"Campus":"Industry",x.o)}</div>
+      </div>`).join("");
+
+    mount.innerHTML="";
+    mount.appendChild(el(`<div class="scrap tilt">
+      <p class="note">done &mdash; here's where you landed</p>
+      <h2>${isInd?"You against 300+ students":"You against the industry room"}</h2>
+      <div class="score-grid">
+        <div class="score"><div class="n">${align}%</div><div class="l">Alignment</div>
+          <div class="d">You matched the ${otherName} majority on ${matched} of ${scored} questions.</div></div>
+        <div class="score"><div class="n">${top.length?top[0].dist:0}%</div><div class="l">Widest gap</div>
+          <div class="d">On your single most contrarian answer.</div></div>
+        <div class="score"><div class="n">${Q.length}</div><div class="l">Questions</div>
+          <div class="d">Five dimensions, no right answers.</div></div>
+      </div>
+      <div class="legend"><span><i style="background:var(--pink)"></i>Option A</span><span><i style="background:var(--mint)"></i>Option B</span></div>
+      <hr class="hr">
+      <h3>Where you diverge most</h3>
+      ${topHtml||'<p class="muted">Not enough comparison data yet.</p>'}
+      <hr class="hr">
+      <h3>By dimension</h3>
+      ${dimHtml}
+    </div>`));
+
+    mount.appendChild(emailCard());
+    mount.appendChild(el(`<div class="scrap tilt-r"><h3>Compare everyone</h3>
+      <p class="muted" style="margin-bottom:12px">Your answers are in. The full campus-versus-industry picture lives in the research view.</p>
+      <button class="btn ghost" id="goresearch">Open the research</button></div>`));
+    document.getElementById("goresearch").addEventListener("click",()=>switchTab("research"));
+    mount.scrollIntoView({block:"start",behavior:"smooth"});
+  }
+
+  render();
+}
+
+/* ============================ EMAIL CARD ============================ */
+function emailCard(){
+  const c=el(`<div class="scrap tilt-r">
+    <p class="note">want the findings?</p>
+    <h2>We'll send you the study</h2>
+    <p class="muted">When collection closes we publish the full campus-versus-industry report. Drop your email and we'll send it across.</p>
+    <div class="row">
+      <input type="email" id="em" placeholder="you@company.com" autocomplete="email">
+      <button class="btn" id="emgo">Send it to me</button>
+    </div>
+    <div id="emmsg"></div>
+  </div>`);
+  c.querySelector("#emgo").addEventListener("click",async()=>{
+    const v=c.querySelector("#em").value.trim();
+    const msg=c.querySelector("#emmsg");
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){msg.innerHTML='<p class="muted" style="margin-top:10px">That address doesn\'t look right — check it and try again.</p>';return;}
+    await attachEmail(v);
+    msg.innerHTML='<p class="ok">Got it. We\'ll be in touch when the study is out.</p>';
+    c.querySelector("#em").disabled=true;c.querySelector("#emgo").disabled=true;
+  });
+  return c;
+}
+
+/* ============================ VIEWS ============================ */
+function renderCampus(){
+  const v=document.getElementById("view-campus");
+  v.innerHTML="";
+  const intro=el(`<div class="scrap tilt">
+    <p class="note">eighteen questions, two minutes</p>
+    <h2>Do you think like a CMO yet?</h2>
+    <p>Every question has two defensible answers and no correct one. Pick fast — your first instinct is the data we want.</p>
+    <p class="muted" style="margin-top:10px">At the end you'll see your answers against the senior marketers who took the same set.</p>
+    <div class="row"><button class="btn" id="startc">Start</button></div>
+  </div>`);
+  v.appendChild(intro);
+  document.getElementById("startc").addEventListener("click",()=>Quiz("campus",v));
+}
+
+function renderIndustry(){
+  const v=document.getElementById("view-industry");
+  v.innerHTML="";
+  const camN=pool(true).filter(r=>r.role==="campus").length;
+  const intro=el(`<div class="scrap tilt">
+    <p class="note">same eighteen questions</p>
+    <h2>${camN} students have already answered these</h2>
+    <p>Pick your side on each. Where you and campus split, we'll show you the number and ask you one question about it.</p>
+    <p class="muted" style="margin-top:10px">Takes about four minutes. Your answers join the industry side of the study.</p>
+    <div class="row"><button class="btn" id="starti">Start</button></div>
+  </div>`);
+  v.appendChild(intro);
+  document.getElementById("starti").addEventListener("click",()=>Quiz("industry",v));
+}
+
+let includeSample=true;
+function renderResearch(){
+  const v=document.getElementById("view-research");
+  const rows=pool(includeSample);
+  const cam=rows.filter(r=>r.role==="campus"),ind=rows.filter(r=>r.role==="industry");
+  const mine=collected().length;
+
+  const data=Q.map(q=>{
+    const c=pctA(cam,q.id),i=pctA(ind,q.id);
+    return {q,c,i,gap:(c!==null&&i!==null)?Math.abs(c-i):null};
+  });
+  const ranked=data.filter(d=>d.gap!==null).sort((a,b)=>b.gap-a.gap);
+  const avgGap=ranked.length?Math.round(ranked.reduce((s,d)=>s+d.gap,0)/ranked.length):0;
+
+  const dimScores=Object.keys(DIMS).map(k=>{
+    const set=ranked.filter(d=>d.q.dim===k);
+    return {k,avg:set.length?Math.round(set.reduce((s,d)=>s+d.gap,0)/set.length):0,n:set.length};
+  }).sort((a,b)=>b.avg-a.avg);
+
+  const whys=LOCAL.filter(r=>r.role==="industry").flatMap(r=>
+    Object.entries(r.why||{}).filter(([,t])=>t&&t.length).map(([qid,t])=>({qid,t})));
+
+  v.innerHTML="";
+
+  v.appendChild(el(`<div class="scrap tilt">
+    <p class="note">live, updating as people answer</p>
+    <h2>Campus vs Industry</h2>
+    <div class="score-grid">
+      <div class="score"><div class="n">${cam.length}</div><div class="l">Campus responses</div></div>
+      <div class="score"><div class="n">${ind.length}</div><div class="l">Industry responses</div></div>
+      <div class="score"><div class="n">${avgGap}pt</div><div class="l">Mean divergence</div>
+        <div class="d">Average distance between the two groups across all ${ranked.length} questions.</div></div>
+      <div class="score"><div class="n">${ranked.filter(d=>d.gap>=30).length}</div><div class="l">Hard splits</div>
+        <div class="d">Questions where the groups are 30+ points apart.</div></div>
+    </div>
+    <label class="toggle"><input type="checkbox" id="smp" ${includeSample?"checked":""}> Include the sample baseline dataset</label>
+    <p class="muted" style="margin-top:6px;font-size:.8rem">The baseline is placeholder data so the dashboard reads properly before collection. Untick it to see only real responses.</p>
+    <p class="muted" style="margin-top:10px;font-size:.8rem"><b>Shared store:</b> ${
+      shareState==="on"?`writing to your Google Sheet &mdash; ${REMOTE.length} response${REMOTE.length===1?"":"s"} saved for everyone`
+      :shareState==="connecting"?"connecting&hellip;"
+      :"not connected &mdash; check the ENDPOINT URL at the top of the file"}</p>
+  </div>`));
+  document.getElementById("smp").addEventListener("change",e=>{includeSample=e.target.checked;renderResearch();});
+
+  v.appendChild(el(`<div class="scrap tilt-r">
+    <h2>Divergence index</h2>
+    <p class="muted">Each question scored on the absolute distance between the two groups' choice of option A. Anything above 30 points is a genuine split rather than noise.</p>
+    ${ranked.slice(0,6).map(d=>`
+      <div style="margin:16px 0 20px">
+        <div class="dim-head"><b>${esc(d.q.t)}</b><em>${d.gap} pt gap</em></div>
+        <p class="muted" style="margin:2px 0 8px;font-size:.8rem">A = ${esc(d.q.a.l)} &nbsp;&middot;&nbsp; B = ${esc(d.q.b.l)}</p>
+        ${splitBar("Campus",d.c)}${splitBar("Industry",d.i)}
+      </div>`).join("")||'<p class="muted">No responses yet.</p>'}
+    <div class="legend"><span><i style="background:var(--pink)"></i>Option A</span><span><i style="background:var(--mint)"></i>Option B</span></div>
+  </div>`));
+
+  v.appendChild(el(`<div class="scrap tilt">
+    <h2>Where the thinking splits</h2>
+    <p class="muted">Mean divergence grouped by dimension. The top row is where campus and industry are furthest apart in how they reason, not just what they answer.</p>
+    <div style="margin-top:16px">
+    ${dimScores.map(d=>`<div class="dim">
+      <div class="dim-head"><b>${esc(DIMS[d.k])}</b><em>${d.avg} pt</em></div>
+      <div class="dim-track"><div class="dim-fill" style="width:${Math.min(d.avg*1.6,100)}%"></div></div>
+      <p class="dim-note">${d.n} question${d.n===1?"":"s"}</p>
+    </div>`).join("")}
+    </div>
+  </div>`));
+
+  v.appendChild(el(`<div class="scrap tilt-r">
+    <h2>Full question set</h2>
+    <div class="tscroll"><table>
+      <thead><tr><th>Question</th><th>Dimension</th><th>Campus A</th><th>Industry A</th><th>Gap</th></tr></thead>
+      <tbody>${data.map(d=>`<tr class="${d.gap>=30?"hot":""}">
+        <td>${esc(d.q.t)}</td><td>${esc(DIMS[d.q.dim])}</td>
+        <td class="num">${d.c===null?"—":d.c+"%"}</td>
+        <td class="num">${d.i===null?"—":d.i+"%"}</td>
+        <td class="num">${d.gap===null?"—":d.gap+" pt"}</td></tr>`).join("")}</tbody>
+    </table></div>
+  </div>`));
+
+  if(whys.length){
+    v.appendChild(el(`<div class="scrap tilt">
+      <h2>What industry said about the gaps</h2>
+      <p class="muted">Collected when a leader's answer went against the campus majority.</p>
+      ${whys.map(w=>{const q=Q.find(x=>x.id===w.qid);return `<div style="border-left:3px solid var(--pink);padding-left:13px;margin-top:15px">
+        <p class="muted" style="margin:0 0 4px;font-size:.8rem">${esc(q?q.t:w.qid)}</p>
+        <p style="margin:0">&ldquo;${esc(w.t)}&rdquo;</p></div>`;}).join("")}
+    </div>`));
+  }
+
+  v.appendChild(el(`<div class="scrap tilt-r">
+    <h2>Export</h2>
+    <p class="muted">${mine} real response${mine===1?"":"s"} so far${LOCAL.length?` (${LOCAL.length} of them saved only on this browser)`:""}. Copy them as JSON to pull into your analysis.</p>
+    <div class="row"><button class="btn ghost" id="cp">Copy raw responses</button><span id="cpmsg" class="ok" style="margin:0"></span></div>
+  </div>`));
+  document.getElementById("cp").addEventListener("click",async()=>{
+    const txt=JSON.stringify(collected(),null,2);const m=document.getElementById("cpmsg");
+    try{await navigator.clipboard.writeText(txt);m.textContent="copied";}
+    catch(e){
+      const ta=document.createElement("textarea");ta.value=txt;ta.style.width="100%";ta.style.minHeight="160px";
+      document.getElementById("cp").parentElement.after(ta);ta.select();m.textContent="select and copy";
+    }
+  });
+
+  v.appendChild(emailCard());
+}
+
+/* ============================ TABS ============================ */
+const VIEWS={campus:renderCampus,industry:renderIndustry,research:renderResearch};
+const rendered={};
+function switchTab(name){
+  currentTab=name;
+  ["campus","industry","research"].forEach(n=>{
+    const t=document.getElementById("tab-"+n),p=document.getElementById("view-"+n);
+    const on=n===name;t.setAttribute("aria-selected",on?"true":"false");p.hidden=!on;
+  });
+  if(name==="research"){renderResearch();}
+  else if(!rendered[name]){VIEWS[name]();rendered[name]=true;}
+  try{history.replaceState(null,"","#"+name);}catch(e){}
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+["campus","industry","research"].forEach(n=>
+  document.getElementById("tab-"+n).addEventListener("click",()=>switchTab(n)));
+
+const h=(location.hash||"").replace("#","");
+switchTab(["campus","industry","research"].includes(h)?h:"campus");
+</script>
+
+</body>
+</html>
