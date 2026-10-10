@@ -730,6 +730,18 @@ function Quiz(role,mount){
       </div>`).join("");
 
     mount.innerHTML="";
+    const nextCard=el(`<div class="scrap tilt-r" style="border:2px solid var(--pink)">
+      <p class="note" style="margin-bottom:4px">finished?</p>
+      <h2 style="margin-bottom:6px">Hand it to the next person</h2>
+      <p class="muted" style="margin-bottom:0">Clears the screen and starts a fresh set of answers. Everything just answered is already saved.</p>
+      <div class="row"><button class="btn" data-again>Start again</button></div>
+    </div>`);
+    nextCard.querySelector("[data-again]").addEventListener("click",()=>{
+      i=0;Object.keys(answers).forEach(k=>delete answers[k]);
+      Object.keys(why).forEach(k=>delete why[k]);
+      render();window.scrollTo({top:0,behavior:"smooth"});
+    });
+    mount.appendChild(nextCard);
     mount.appendChild(el(`<div class="scrap tilt">
       <p class="note">done &mdash; here's where you landed</p>
       <h2>${isInd?"You against 300+ students":"You against the industry room"}</h2>
