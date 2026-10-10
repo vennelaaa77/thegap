@@ -12,6 +12,11 @@ bit that writes into your spreadsheet. Budget about 20 minutes.
 3. Delete whatever is in `Code.gs` there, paste in the whole of the `Code.gs`
    file from this folder, and save.
 
+**If the Extensions menu is hidden** (narrow window), there's an easier route:
+go to **script.new** instead, paste `Code.gs` there, and set `SHEET_ID` at the
+top to your spreadsheet's id — the long string in the sheet's URL between
+`/d/` and `/edit`. Everything else below is the same.
+
 ## 2. Deploy it
 
 1. In the Apps Script editor, top right: **Deploy → New deployment**.

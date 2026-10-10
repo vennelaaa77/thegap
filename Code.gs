@@ -7,9 +7,20 @@
  * Copy the /exec URL it gives you into the HTML file.
  */
 
+/* Leave SHEET_ID blank when this script lives inside the spreadsheet
+   (Extensions > Apps Script). Set it to the spreadsheet's id when the script
+   is a standalone project (script.new) — the id is the long string in the
+   sheet's URL between /d/ and /edit. */
+var SHEET_ID = '';
 var SHEET_NAME = 'Responses';
 var QIDS = ['q1','q2','q3','q4','q5','q6','q7','q8','q9',
             'q10','q11','q12','q13','q14','q15','q16','q17','q18'];
+
+function book_() {
+  return SHEET_ID
+    ? SpreadsheetApp.openById(SHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+}
 
 function headers_() {
   var h = ['id', 'timestamp', 'role', 'email'];
@@ -19,7 +30,7 @@ function headers_() {
 }
 
 function sheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = book_();
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
