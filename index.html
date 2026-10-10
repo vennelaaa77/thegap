@@ -224,7 +224,7 @@ label.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.12em;tex
     </div>
     <p class="eyebrow">presents</p>
     <h1>The Gap</h1>
-    <p class="dek">Eighteen questions with no right answer. Campus answers them. Industry answers them. We publish where the two disagree.</p>
+    <p class="dek">Eight questions with no right answer. Campus answers them. Industry answers them. We publish where the two disagree.</p>
     <span class="stamp">Field study &middot; GLC 4.0</span>
   </header>
 
@@ -377,6 +377,12 @@ const Q = [
  seedI:53,seedC:76,
  why:"Campus is far more willing to launch unfinished. Is that speed you've lost, or a lesson they haven't had yet?"}
 ];
+
+/* The eight asked at the stall. Q keeps all eighteen so responses already
+   collected still read back correctly; QORDER below stays the full list so the
+   stored answer string keeps its positions. */
+const ASK=["q1","q2","q5","q6","q7","q10","q11","q15"];
+const QA=Q.filter(q=>ASK.indexOf(q.id)>=0);
 
 /* ============================ SCENES ============================ */
 /* Flat cut-paper illustrations, 120x80. Colour comes from CSS vars so the
@@ -545,7 +551,7 @@ function buildSample(role,n,key){
   const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};
   for(let i=0;i<n;i++){
     const ans={};
-    Q.forEach(q=>{ans[q.id]=rnd()*100<q[key]?"A":"B";});
+    QA.forEach(q=>{ans[q.id]=rnd()*100<q[key]?"A":"B";});
     out.push({role,answers:ans,why:{},sample:true});
   }
   return out;
@@ -669,13 +675,13 @@ function Quiz(role,mount){
   const isInd=role==="industry";
 
   function render(){
-    if(i>=Q.length){return results();}
-    const q=Q[i];
+    if(i>=QA.length){return results();}
+    const q=QA[i];
     mount.innerHTML="";
     const card=el(`<div class="scrap ${i%2?"tilt-r":"tilt"}">
       <div class="progress">
-        <div class="bar"><span style="width:${(i/Q.length)*100}%"></span></div>
-        <div class="count">${String(i+1).padStart(2,"0")} / ${Q.length}</div>
+        <div class="bar"><span style="width:${(i/QA.length)*100}%"></span></div>
+        <div class="count">${String(i+1).padStart(2,"0")} / ${QA.length}</div>
       </div>
       <p class="qdim">${esc(DIMS[q.dim])}</p>
       <p class="qtext">${esc(q.t)}</p>
@@ -730,7 +736,7 @@ function Quiz(role,mount){
     let matched=0,scored=0;
     const perDim={};Object.keys(DIMS).forEach(k=>perDim[k]={gap:0,n:0});
     const lines=[];
-    Q.forEach(q=>{
+    QA.forEach(q=>{
       const o=pctA(compareTo,q.id);if(o===null)return;
       const mine=answers[q.id];
       const majority=o>=50?"A":"B";
@@ -783,7 +789,7 @@ function Quiz(role,mount){
           <div class="d">You matched the ${otherName} majority on ${matched} of ${scored} questions.</div></div>
         <div class="score"><div class="n">${top.length?top[0].dist:0}%</div><div class="l">Widest gap</div>
           <div class="d">On your single most contrarian answer.</div></div>
-        <div class="score"><div class="n">${Q.length}</div><div class="l">Questions</div>
+        <div class="score"><div class="n">${QA.length}</div><div class="l">Questions</div>
           <div class="d">Five dimensions, no right answers.</div></div>
       </div>
       <div class="legend"><span><i style="background:var(--pink)"></i>Option A</span><span><i style="background:var(--mint)"></i>Option B</span></div>
@@ -834,7 +840,7 @@ function renderCampus(){
   const v=document.getElementById("view-campus");
   v.innerHTML="";
   const intro=el(`<div class="scrap tilt">
-    <p class="note">eighteen questions, two minutes</p>
+    <p class="note">eight questions, one minute</p>
     <h2>Do you think like a CMO yet?</h2>
     <p>Every question has two defensible answers and no correct one. Pick fast — your first instinct is the data we want.</p>
     <p class="muted" style="margin-top:10px">At the end you'll see your answers against the senior marketers who took the same set.</p>
@@ -849,8 +855,8 @@ function renderIndustry(){
   v.innerHTML="";
   const camN=collected().filter(r=>r.role==="campus").length;
   const intro=el(`<div class="scrap tilt">
-    <p class="note">same eighteen questions</p>
-    <h2>${camN?camN+" students have already answered these":"Same eighteen questions the students answered"}</h2>
+    <p class="note">same eight questions</p>
+    <h2>${camN?camN+" students have already answered these":"The same eight questions the students answered"}</h2>
     <p>Pick your side on each. Where you and campus split, we'll show you the number and ask you one question about it.</p>
     <p class="muted" style="margin-top:10px">Takes about four minutes. Your answers join the industry side of the study.</p>
     <div class="row"><button class="btn" id="starti">Start</button></div>
@@ -866,7 +872,7 @@ function renderResearch(){
   const cam=rows.filter(r=>r.role==="campus"),ind=rows.filter(r=>r.role==="industry");
   const mine=collected().length;
 
-  const data=Q.map(q=>{
+  const data=QA.map(q=>{
     const c=pctA(cam,q.id),i=pctA(ind,q.id);
     return {q,c,i,gap:(c!==null&&i!==null)?Math.abs(c-i):null};
   });
